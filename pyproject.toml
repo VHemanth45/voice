@@ -1,0 +1,10 @@
+[project]
+name = "voice"
+version = "0.1.0"
+description = "Minimal Pipecat voice assistant: browser → Silero VAD → Whisper STT → Ollama → Cartesia TTS → browser"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pipecat-ai[silero,whisper,cartesia,webrtc,runner]",
+    "python-dotenv>=1.0.0,<2",
+]
