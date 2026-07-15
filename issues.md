@@ -29,13 +29,13 @@
 
 **Blocked by:** 01 — Config & Prompts Module
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] `services.py` exports factory functions: `create_stt(config)`, `create_llm(config)`, `create_tts(config)`
-- [ ] Each factory accepts the config dataclass (not raw strings)
-- [ ] Each factory wraps service init in try/except and re-raises with a human-readable message naming the service and the cause
-- [ ] `bot.py` calls these factories instead of inline service construction
-- [ ] `uv run bot.py` with Ollama stopped produces a clear error message (not a stack trace)
+- [x] `services.py` exports factory functions: `create_stt(config)`, `create_llm(config)`, `create_tts(config)`
+- [x] Each factory accepts the config dataclass (not raw strings)
+- [x] Each factory wraps service init in try/except and re-raises with a human-readable message naming the service and the cause
+- [x] `bot.py` calls these factories instead of inline service construction
+- [x] `uv run bot.py` with Ollama stopped produces a clear error message (not a stack trace)
 
 ---
 
