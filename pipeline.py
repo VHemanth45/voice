@@ -31,6 +31,10 @@ def create_pipeline(config, transport):
                 ),
             ),
         ),
+        # Configure summarization
+        summarizer_params={
+            "token_limit": config.max_context_tokens,
+        },
     )
 
     pipeline = Pipeline([

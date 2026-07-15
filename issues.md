@@ -110,13 +110,13 @@
 
 **Blocked by:** 06 — Bot Entrypoint Rewrite
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] `LLMContextSummarizer` wired into the pipeline's aggregator setup
-- [ ] Auto-summarization triggers when context exceeds a configurable token threshold (default: 4096 tokens)
-- [ ] `MAX_CONTEXT_TOKENS` env var added to config dataclass and `.env.example`
-- [ ] After summarization, the system prompt is preserved and recent turns remain uncompressed
-- [ ] A 20+ turn conversation does not crash or produce incoherent responses
+- [x] `LLMContextSummarizer` wired into the pipeline's aggregator setup
+- [x] Auto-summarization triggers when context exceeds a configurable token threshold (default: 4096 tokens)
+- [x] `MAX_CONTEXT_TOKENS` env var added to config dataclass and `.env.example`
+- [x] After summarization, the system prompt is preserved and recent turns remain uncompressed
+- [x] A 20+ turn conversation does not crash or produce incoherent responses
 
 ---
 

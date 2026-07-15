@@ -23,6 +23,7 @@ class Config:
     vad_stop_secs: float
     vad_start_secs: float
     log_level: str
+    max_context_tokens: int
 
     def __post_init__(self):
         # 1. Validate CARTESIA_API_KEY
@@ -76,6 +77,15 @@ class Config:
             )
             sys.exit(1)
 
+        # 6. Validate MAX_CONTEXT_TOKENS
+        if not isinstance(self.max_context_tokens, int) or self.max_context_tokens <= 0:
+            print(
+                f"Error: Invalid MAX_CONTEXT_TOKENS '{self.max_context_tokens}'. "
+                f"It must be a positive integer.",
+                file=sys.stderr
+            )
+            sys.exit(1)
+
 
 def load_config() -> Config:
     # Read raw environment variables and provide defaults where applicable
@@ -100,6 +110,11 @@ def load_config() -> Config:
 
     log_level = os.getenv("LOG_LEVEL", "INFO").strip()
 
+    try:
+        max_context_tokens = int(os.getenv("MAX_CONTEXT_TOKENS", "4096"))
+    except ValueError:
+        max_context_tokens = os.getenv("MAX_CONTEXT_TOKENS")  # type: ignore
+
     config = Config(
         cartesia_api_key=cartesia_api_key,
         cartesia_voice_id=cartesia_voice_id,
@@ -110,6 +125,7 @@ def load_config() -> Config:
         whisper_compute_type=whisper_compute_type,
         vad_stop_secs=vad_stop_secs,  # type: ignore
         vad_start_secs=vad_start_secs,  # type: ignore
-        log_level=log_level
+        log_level=log_level,
+        max_context_tokens=max_context_tokens  # type: ignore
     )
     return config
