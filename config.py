@@ -22,6 +22,8 @@ class Config:
     whisper_compute_type: str
     vad_stop_secs: float
     vad_start_secs: float
+    idle_prompt_secs: float
+    idle_disconnect_secs: float
     log_level: str
     max_context_tokens: int
 
@@ -35,6 +37,20 @@ class Config:
                 file=sys.stderr
             )
             sys.exit(1)
+
+        # 2a. Validate IDLE_PROMPT_SECS and IDLE_DISCONNECT_SECS
+        for name, val in [("IDLE_PROMPT_SECS", self.idle_prompt_secs), ("IDLE_DISCONNECT_SECS", self.idle_disconnect_secs)]:
+            try:
+                f_val = float(val)
+                if f_val <= 0:
+                    raise ValueError("Must be a positive float")
+            except (ValueError, TypeError) as e:
+                print(
+                    f"Error: Invalid value for {name}: '{val}'. "
+                    f"It must be a positive float.",
+                    file=sys.stderr
+                )
+                sys.exit(1)
 
         # 2. Validate VAD_STOP_SECS and VAD_START_SECS
         for name, val in [("VAD_STOP_SECS", self.vad_stop_secs), ("VAD_START_SECS", self.vad_start_secs)]:
@@ -97,6 +113,17 @@ def load_config() -> Config:
     whisper_device = os.getenv("WHISPER_DEVICE", "auto").strip()
     whisper_compute_type = os.getenv("WHISPER_COMPUTE_TYPE", "int8").strip()
     
+    # Try converting numeric idle timeout values
+    try:
+        idle_prompt_secs = float(os.getenv("IDLE_PROMPT_SECS", "15"))
+    except ValueError:
+        idle_prompt_secs = os.getenv("IDLE_PROMPT_SECS")
+
+    try:
+        idle_disconnect_secs = float(os.getenv("IDLE_DISCONNECT_SECS", "60"))
+    except ValueError:
+        idle_disconnect_secs = os.getenv("IDLE_DISCONNECT_SECS")
+
     # Try converting numeric values early, let dataclass post_init handle final validation
     try:
         vad_stop_secs = float(os.getenv("VAD_STOP_SECS", "0.3"))
@@ -125,6 +152,8 @@ def load_config() -> Config:
         whisper_compute_type=whisper_compute_type,
         vad_stop_secs=vad_stop_secs,  # type: ignore
         vad_start_secs=vad_start_secs,  # type: ignore
+        idle_prompt_secs=idle_prompt_secs,  # type: ignore
+        idle_disconnect_secs=idle_disconnect_secs,  # type: ignore
         log_level=log_level,
         max_context_tokens=max_context_tokens  # type: ignore
     )
