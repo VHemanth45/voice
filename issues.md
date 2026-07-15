@@ -142,12 +142,12 @@
 
 **Blocked by:** 03 — Logging Configuration, 06 — Bot Entrypoint Rewrite
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] PipelineWorker `on_metrics` or equivalent handler registered to capture MetricsFrame data
-- [ ] Metrics logged at DEBUG level with service name and latency values
-- [ ] Running with `LOG_LEVEL=DEBUG` shows per-turn TTFB for STT, LLM, and TTS
-- [ ] Running with `LOG_LEVEL=INFO` (default) does not show metrics noise
+- [x] PipelineWorker `on_metrics` or equivalent handler registered to capture MetricsFrame data
+- [x] Metrics logged at DEBUG level with service name and latency values
+- [x] Running with `LOG_LEVEL=DEBUG` shows per-turn TTFB for STT, LLM, and TTS
+- [x] Running with `LOG_LEVEL=INFO` (default) does not show metrics noise
 
 ---
 

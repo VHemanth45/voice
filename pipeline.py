@@ -1,7 +1,6 @@
-from loguru import logger
-
 from pipecat.audio.vad.silero import SileroVADAnalyzer
 from pipecat.audio.vad.vad_analyzer import VADParams
+from pipecat.observers.loggers.metrics_log_observer import MetricsLogObserver
 from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.worker import PipelineParams, PipelineWorker
 from pipecat.processors.aggregators.llm_context import LLMContext
@@ -12,6 +11,11 @@ from pipecat.processors.aggregators.llm_response_universal import (
 
 import prompts
 import services
+
+
+def _create_metrics_observer():
+    """Return an observer that logs pipeline metrics frames at DEBUG level."""
+    return MetricsLogObserver()
 
 
 def create_pipeline(config, transport):
@@ -46,6 +50,7 @@ def create_pipeline(config, transport):
     worker = PipelineWorker(
         pipeline,
         params=PipelineParams(enable_metrics=True, enable_usage_metrics=True),
+        observers=[_create_metrics_observer()],
     )
 
     return worker, context
