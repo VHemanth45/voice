@@ -21,14 +21,12 @@ from pipecat.processors.aggregators.llm_response_universal import (
 )
 from pipecat.runner.types import RunnerArguments
 from pipecat.runner.utils import create_transport
-from pipecat.services.cartesia.tts import CartesiaTTSService
-from pipecat.services.ollama.llm import OLLamaLLMService
-from pipecat.services.whisper.stt import WhisperSTTService
 from pipecat.transports.base_transport import TransportParams
 
-# Import new config and prompts modules
+# Import new config, prompts, and services modules
 from config import load_config
 import prompts
+import services
 
 config = load_config()
 
@@ -41,27 +39,9 @@ async def run_bot(transport, runner_args: RunnerArguments):
     """Wire up the full pipeline and run it."""
 
     # --- Services ---
-    stt = WhisperSTTService(
-        device=config.whisper_device,
-        compute_type=config.whisper_compute_type,
-        settings=WhisperSTTService.Settings(
-            model=config.whisper_model,
-        ),
-    )
-
-    llm = OLLamaLLMService(
-        base_url=config.ollama_base_url,
-        settings=OLLamaLLMService.Settings(
-            model=config.ollama_model,
-        ),
-    )
-
-    tts = CartesiaTTSService(
-        api_key=config.cartesia_api_key,
-        settings=CartesiaTTSService.Settings(
-            voice=config.cartesia_voice_id,
-        ),
-    )
+    stt = services.create_stt(config)
+    llm = services.create_llm(config)
+    tts = services.create_tts(config)
 
     # --- Context & VAD turn-detection ---
     context = LLMContext(MESSAGES)
