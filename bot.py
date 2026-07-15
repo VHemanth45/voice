@@ -25,10 +25,11 @@ from pipecat.runner.types import RunnerArguments
 from pipecat.runner.utils import create_transport
 from pipecat.transports.base_transport import TransportParams
 
-# Import new config, prompts, and services modules
+# Import new config, prompts, services, and handlers modules
 from config import load_config
 import prompts
 import services
+import handlers
 
 config = load_config()
 
@@ -82,14 +83,15 @@ async def run_bot(transport, runner_args: RunnerArguments):
     # --- Events ---
     @transport.event_handler("on_client_connected")
     async def on_client_connected(transport, client):
-        logger.info("Client connected")
-        context.add_message({"role": "user", "content": prompts.GREETING_MESSAGE})
-        await worker.queue_frames([LLMRunFrame()])
+        await handlers.on_client_connected(transport, client, worker, context)
 
     @transport.event_handler("on_client_disconnected")
     async def on_client_disconnected(transport, client):
-        logger.info("Client disconnected")
-        await worker.cancel()
+        await handlers.on_client_disconnected(transport, client, worker)
+
+    @worker.event_handler("on_error")
+    async def on_pipeline_error(error):
+        await handlers.on_pipeline_error(worker, error)
 
     # --- Run ---
     runner = WorkerRunner(handle_sigint=False)

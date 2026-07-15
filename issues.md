@@ -61,13 +61,13 @@
 
 **Blocked by:** 01 — Config & Prompts Module
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] `handlers.py` exports handler functions: `on_client_connected`, `on_client_disconnected`, `on_pipeline_error`
-- [ ] `on_client_disconnected` wraps `worker.cancel()` in `asyncio.wait_for(timeout=5.0)` and logs a warning on timeout
-- [ ] `on_client_connected` injects the greeting as a user-role message (from prompts module), not a duplicate system message
-- [ ] `on_pipeline_error` logs the error with context
-- [ ] Handler functions are pure (take worker/context/transport as args, no module-level globals)
+- [x] `handlers.py` exports handler functions: `on_client_connected`, `on_client_disconnected`, `on_pipeline_error`
+- [x] `on_client_disconnected` wraps `worker.cancel()` in `asyncio.wait_for(timeout=5.0)` and logs a warning on timeout
+- [x] `on_client_connected` injects the greeting as a user-role message (from prompts module), not a duplicate system message
+- [x] `on_pipeline_error` logs the error with context
+- [x] Handler functions are pure (take worker/context/transport as args, no module-level globals)
 
 ---
 
