@@ -6,9 +6,6 @@ Run:  uv run bot.py
 Open: http://localhost:7860/client
 """
 
-import os
-
-from dotenv import load_dotenv
 from loguru import logger
 
 from pipecat.audio.vad.silero import SileroVADAnalyzer
@@ -29,17 +26,13 @@ from pipecat.services.ollama.llm import OLLamaLLMService
 from pipecat.services.whisper.stt import WhisperSTTService
 from pipecat.transports.base_transport import TransportParams
 
-load_dotenv(override=True)
+# Import new config and prompts modules
+from config import load_config
+import prompts
 
-# ── Configuration (all from env) ──────────────────────────
+config = load_config()
 
-SYSTEM_PROMPT = (
-    "You are a helpful voice assistant. "
-    "Keep responses concise — one or two sentences. "
-    "Be friendly and conversational."
-)
-
-MESSAGES = [{"role": "system", "content": SYSTEM_PROMPT}]
+MESSAGES = [{"role": "system", "content": prompts.SYSTEM_PROMPT}]
 
 
 # ── Bot logic ─────────────────────────────────────────────
@@ -49,24 +42,24 @@ async def run_bot(transport, runner_args: RunnerArguments):
 
     # --- Services ---
     stt = WhisperSTTService(
-        device=os.getenv("WHISPER_DEVICE", "auto"),
-        compute_type=os.getenv("WHISPER_COMPUTE_TYPE", "int8"),
+        device=config.whisper_device,
+        compute_type=config.whisper_compute_type,
         settings=WhisperSTTService.Settings(
-            model=os.getenv("WHISPER_MODEL", "small"),
+            model=config.whisper_model,
         ),
     )
 
     llm = OLLamaLLMService(
-        base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1"),
+        base_url=config.ollama_base_url,
         settings=OLLamaLLMService.Settings(
-            model=os.getenv("OLLAMA_MODEL", "gemma3:4b"),
+            model=config.ollama_model,
         ),
     )
 
     tts = CartesiaTTSService(
-        api_key=os.getenv("CARTESIA_API_KEY", ""),
+        api_key=config.cartesia_api_key,
         settings=CartesiaTTSService.Settings(
-            voice=os.getenv("CARTESIA_VOICE_ID", "71a7ad14-091c-4e8e-a314-022ece01c121"),
+            voice=config.cartesia_voice_id,
         ),
     )
 
@@ -78,8 +71,8 @@ async def run_bot(transport, runner_args: RunnerArguments):
         user_params=LLMUserAggregatorParams(
             vad_analyzer=SileroVADAnalyzer(
                 params=VADParams(
-                    stop_secs=float(os.getenv("VAD_STOP_SECS", "0.3")),
-                    start_secs=float(os.getenv("VAD_START_SECS", "0.2")),
+                    stop_secs=config.vad_stop_secs,
+                    start_secs=config.vad_start_secs,
                 ),
             ),
         ),
@@ -105,7 +98,7 @@ async def run_bot(transport, runner_args: RunnerArguments):
     @transport.event_handler("on_client_connected")
     async def on_client_connected(transport, client):
         logger.info("Client connected")
-        context.add_message({"role": "system", "content": "Say hello and briefly introduce yourself."})
+        context.add_message({"role": "user", "content": prompts.GREETING_MESSAGE})
         await worker.queue_frames([LLMRunFrame()])
 
     @transport.event_handler("on_client_disconnected")
