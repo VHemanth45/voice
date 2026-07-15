@@ -175,13 +175,13 @@
 
 **Blocked by:** 01 — Config & Prompts Module
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] `pytest` added as a dev dependency in `pyproject.toml`
-- [ ] `tests/` directory created with `conftest.py` containing env-patching fixtures
-- [ ] Test: missing `CARTESIA_API_KEY` → `SystemExit`
-- [ ] Test: `VAD_STOP_SECS=notanumber` → `SystemExit`
-- [ ] Test: `WHISPER_MODEL=nonexistent` → `SystemExit`
-- [ ] Test: all valid env vars → correctly typed config dataclass with expected values
-- [ ] Test: only required vars set → optional vars get documented defaults
-- [ ] `uv run pytest` passes all tests
+- [x] `pytest` added as a dev dependency in `pyproject.toml`
+- [x] `tests/` directory created with `conftest.py` containing env-patching fixtures
+- [x] Test: missing `CARTESIA_API_KEY` → `SystemExit`
+- [x] Test: `VAD_STOP_SECS=notanumber` → `SystemExit`
+- [x] Test: `WHISPER_MODEL=nonexistent` → `SystemExit`
+- [x] Test: all valid env vars → correctly typed config dataclass with expected values
+- [x] Test: only required vars set → optional vars get documented defaults
+- [x] `uv run pytest` passes all tests
