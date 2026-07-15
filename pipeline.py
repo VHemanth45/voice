@@ -5,17 +5,25 @@ from loguru import logger
 from pipecat.audio.vad.silero import SileroVADAnalyzer
 from pipecat.audio.vad.vad_analyzer import VADParams
 from pipecat.frames.frames import EndFrame, LLMRunFrame
+from pipecat.observers.loggers.metrics_log_observer import MetricsLogObserver
 from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.worker import PipelineParams, PipelineWorker
 from pipecat.processors.aggregators.llm_context import LLMContext
 from pipecat.processors.aggregators.llm_response_universal import (
+    LLMAssistantAggregatorParams,
     LLMContextAggregatorPair,
     LLMUserAggregatorParams,
 )
 from pipecat.processors.idle_frame_processor import IdleFrameProcessor
+from pipecat.utils.context.llm_context_summarization import LLMAutoContextSummarizationConfig
 
 import prompts
 import services
+
+
+def _create_metrics_observer():
+    """Return an observer that logs pipeline metrics frames at DEBUG level."""
+    return MetricsLogObserver()
 
 
 def create_pipeline(config, transport):
@@ -35,10 +43,12 @@ def create_pipeline(config, transport):
                 ),
             ),
         ),
-        # Configure summarization
-        summarizer_params={
-            "token_limit": config.max_context_tokens,
-        },
+        assistant_params=LLMAssistantAggregatorParams(
+            enable_auto_context_summarization=True,
+            auto_context_summarization_config=LLMAutoContextSummarizationConfig(
+                max_context_tokens=config.max_context_tokens,
+            ),
+        ),
     )
 
     async def on_idle_prompt(processor):
@@ -82,6 +92,7 @@ def create_pipeline(config, transport):
     worker = PipelineWorker(
         pipeline,
         params=PipelineParams(enable_metrics=True, enable_usage_metrics=True),
+        observers=[_create_metrics_observer()],
     )
 
     return worker, context
