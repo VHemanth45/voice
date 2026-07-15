@@ -77,14 +77,14 @@
 
 **Blocked by:** 01 — Config & Prompts Module, 02 — Services Module
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] `pipeline.py` exports a factory function `create_pipeline(config, transport)` that returns `(PipelineWorker, LLMContext)`
-- [ ] Pipeline processor chain matches the correct ordering: transport.input → STT → user_aggregator → LLM → TTS → transport.output → assistant_aggregator
-- [ ] VAD parameters (stop_secs, start_secs) sourced from config dataclass
-- [ ] LLMContext initialized with system prompt from prompts module
-- [ ] PipelineWorker created with `enable_metrics=True` and `enable_usage_metrics=True`
-- [ ] No `os.getenv` calls — everything comes from config
+- [x] `pipeline.py` exports a factory function `create_pipeline(config, transport)` that returns `(PipelineWorker, LLMContext)`
+- [x] Pipeline processor chain matches the correct ordering: transport.input → STT → user_aggregator → LLM → TTS → transport.output → assistant_aggregator
+- [x] VAD parameters (stop_secs, start_secs) sourced from config dataclass
+- [x] LLMContext initialized with system prompt from prompts module
+- [x] PipelineWorker created with `enable_metrics=True` and `enable_usage_metrics=True`
+- [x] No `os.getenv` calls — everything comes from config
 
 ---
 
