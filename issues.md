@@ -45,13 +45,13 @@
 
 **Blocked by:** 01 — Config & Prompts Module
 
-**Status:** ready-for-agent
+**Status:** completed
 
-- [ ] Loguru default handler removed at startup
-- [ ] New stderr handler added with level from `config.log_level` (default: `INFO`)
-- [ ] `LOG_LEVEL` env var documented in `.env.example`
-- [ ] Running with `LOG_LEVEL=DEBUG` produces verbose Pipecat/service output
-- [ ] Running with `LOG_LEVEL=WARNING` suppresses info-level chatter
+- [x] Loguru default handler removed at startup
+- [x] New stderr handler added with level from `config.log_level` (default: `INFO`)
+- [x] `LOG_LEVEL` env var documented in `.env.example`
+- [x] Running with `LOG_LEVEL=DEBUG` produces verbose Pipecat/service output
+- [x] Running with `LOG_LEVEL=WARNING` suppresses info-level chatter
 
 ---
 

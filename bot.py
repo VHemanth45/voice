@@ -6,6 +6,8 @@ Run:  uv run bot.py
 Open: http://localhost:7860/client
 """
 
+import sys
+
 from loguru import logger
 
 from pipecat.audio.vad.silero import SileroVADAnalyzer
@@ -31,6 +33,9 @@ from config import load_config
 import prompts
 
 config = load_config()
+
+logger.remove()
+logger.add(sys.stderr, level=config.log_level, format="{time:HH:mm:ss.SSS} | {level:<7} | {message}")
 
 MESSAGES = [{"role": "system", "content": prompts.SYSTEM_PROMPT}]
 
