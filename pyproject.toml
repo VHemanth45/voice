@@ -8,3 +8,12 @@ dependencies = [
     "pipecat-ai[silero,whisper,cartesia,webrtc,runner]",
     "python-dotenv>=1.0.0,<2",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
